@@ -178,6 +178,29 @@ The below illustrates the setup flow:
         - For demonstration purpose `KONG_TRACING_SAMPLING_RATE` is set to 1 which means all traces are sent to the OTEL Collector. In production, this should be set as per the requirements.
         - The tracing is captured by the Open Telemetry plugin and sent to the OTEL Collector
 
+### Kong API Gateway - Health Checks Configuration
+Kong provides robust health checking capabilities to ensure service reliability. In this project, both active and passive health checks are configured:
+
+#### Active Health Checks:
+- **HTTP Path**: Checks `/health` endpoint on each service
+- **Frequency**: Healthy services are checked every 5 seconds, unhealthy every 15 seconds
+- **Success Criteria**: Service is considered healthy after 2 successful responses with 204 status code
+- **Failure Criteria**: Service is marked unhealthy after any of these:
+  - 1 TCP connection failure
+  - 1 timeout (3 seconds max)
+  - 1 HTTP failure (status codes 429, 500, 503)
+
+#### Passive Health Checks:
+- **Monitoring**: Passively monitors real traffic to detect failures
+- **Failure Criteria**: Service is marked unhealthy after:
+  - 1 TCP connection failure
+  - 1 timeout
+  - 1 HTTP failure (status codes 500, 503)
+
+This dual health check approach provides comprehensive monitoring:
+- Active checks proactively test services even when there's no traffic
+- Passive checks detect issues during normal operation
+
 ### Dynamic Target Registration
 `register_service.sh` is executed for the API services such as `auth-service` and `sound-monitor-service`. It uses the Kong Admin API to register the targets. Since multiple networks are attached and the docker services get multiple IP addresses (one for each network), the prefix passed in docker compose entrypoint command is used to decide the IP address to use to register with Kong
 
