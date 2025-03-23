@@ -1,4 +1,4 @@
-# Kong API Gateway with Fast API, Open Telemetry and Open Observe in Docker
+# Kong API Gateway with Fast API, Open Telemetry and OpenObserve in Docker
 
 ## Architecture
 ```mermaid
