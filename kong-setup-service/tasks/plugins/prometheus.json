@@ -1,0 +1,18 @@
+{
+    "name": "prometheus",
+    "enabled": true,
+    "protocols": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+    ],
+    "config": {
+        "ai_metrics": false,
+        "bandwidth_metrics": false,
+        "latency_metrics": true,
+        "per_consumer": false,
+        "status_code_metrics": true,
+        "upstream_health_metrics": true
+    }
+}

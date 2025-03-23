@@ -1,0 +1,196 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kong
+  
+  kong-migration:
+    image: kong/kong-gateway:3.8.0.0
+    container_name: kong-migration
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_DATABASE=postgres
+      - KONG_PG_HOST=postgres
+      - KONG_PG_USER=postgres
+      - KONG_PG_PASSWORD=postgres
+    command: kong migrations bootstrap
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - kong
+      
+  kong:
+    image: kong/kong-gateway:3.8.0.0
+    container_name: kong
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_DATABASE=postgres
+      - KONG_PG_HOST=postgres
+      - KONG_PG_USER=postgres
+      - KONG_PG_PASSWORD=postgres
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001
+      - KONG_ADMIN_GUI_URL=http://localhost:8002
+      - KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES=kong.plugins.jwt.jwt_parser
+      - KONG_TRACING_INSTRUMENTATIONS=request
+      - KONG_TRACING_SAMPLING_RATE=1
+      # - KONG_LOG_LEVEL=debug  
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+    depends_on:
+      kong-migration:
+        condition: service_completed_successfully
+    networks:
+      - kong
+      - otel
+      - auth
+      - sound
+
+  kong-setup-service:
+    build: ./kong-setup-service
+    container_name: kong-setup-service
+    environment:
+      - KONG_ADDR=http://kong:8001
+      - CONSUMER_USERNAME=api_user
+      - CREDENTIAL_KEY=issuer_key
+      - JWT_SECRET=jwt_secret
+    depends_on:
+      kong-migration:
+        condition: service_completed_successfully
+    volumes:
+      - ./kong-setup-service:/app
+    networks:
+      - kong
+
+  openobserve:
+    image: public.ecr.aws/zinclabs/openobserve:v0.12.1
+    container_name: openobserve
+    environment:
+      - ZO_ROOT_USER_EMAIL=susmit@example.com
+      - ZO_ROOT_USER_PASSWORD=passComplex#123
+      - ZO_DATA_DIR=/data
+    ports:
+      - "5080:5080"
+    volumes:
+      - ./data/openobserve:/data
+    networks:
+      - obs
+      - otel
+  
+  obs-setup-service:
+    build: ./obs-setup-service
+    container_name: obs-setup-service
+    environment:
+      - OPENOBSERVE_ADDR=http://openobserve:5080
+      - OPENOBSERVE_USERNAME=susmit@example.com
+      - OPENOBSERVE_PASSWORD=passComplex#123
+    volumes:
+      - ./obs-setup-service:/app
+    networks:
+      - obs
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.111.0
+    container_name: otel-collector
+    volumes:
+      - ./obs-setup-service/otel-collector-config.yml:/etc/otel-collector-config.yml
+    command: ["--config=/etc/otel-collector-config.yml"]
+    ports:
+      - "4318:4318"
+    depends_on:
+      obs-setup-service:
+        condition: service_completed_successfully
+    networks:
+      - otel
+      - obs
+
+  auth-service:
+    build: ./auth-service
+    environment:
+      - TRACES_ENDPOINT=http://otel-collector:4318/v1/traces
+      - LOGS_ENDPOINT=http://otel-collector:4318/v1/logs
+      - CREDENTIAL_KEY=issuer_key
+      - JWT_SECRET=jwt_secret
+    entrypoint: ["/bin/sh", "-c", "/app/register_service.sh auth-upstream 8000 172.28.4 && uvicorn app:app --host 0.0.0.0 --port 8000 --reload"]
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: dnsrr
+    depends_on:
+      kong-setup-service:
+          condition: service_completed_successfully
+    volumes:
+      - ./auth-service/src:/app
+    # ports:
+    #   - "5000-5010:8000"
+    networks:
+      - auth
+      - otel
+
+  sound-monitor-service:
+    build: ./sound-monitor-service
+    environment:
+      - TRACES_ENDPOINT=http://otel-collector:4318/v1/traces
+      - LOGS_ENDPOINT=http://otel-collector:4318/v1/logs
+    entrypoint: ["/bin/sh", "-c", "/app/register_service.sh sound-monitor-upstream 8000 172.28.5 && uvicorn app:app --host 0.0.0.0 --port 8000 --reload"]
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: dnsrr
+    depends_on:
+      kong-setup-service:
+          condition: service_completed_successfully
+    volumes:
+      - ./sound-monitor-service/src:/app
+    # ports:
+    #   - "6000-6010:8000"
+    networks:
+      - sound
+      - otel
+
+networks:
+  kong:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.1.0/24
+  
+  obs:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.2.0/24
+          
+  otel:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.3.0/24
+          
+  auth:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.4.0/24
+  
+  sound:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.5.0/24

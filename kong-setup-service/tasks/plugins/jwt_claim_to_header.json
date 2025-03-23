@@ -1,0 +1,24 @@
+{
+  "name": "post-function",
+  "enabled": true,
+  "protocols": [
+    "grpc",
+    "grpcs",
+    "http",
+    "https",
+    "ws",
+    "wss"
+  ],
+  "config": {
+    "access": [],
+    "body_filter": [],
+    "certificate": [],
+    "header_filter": [],
+    "log": [],
+    "rewrite": [],
+    "ws_client_frame": [],
+    "ws_close": [],
+    "ws_handshake": [],
+    "ws_upstream_frame": []
+  }
+}

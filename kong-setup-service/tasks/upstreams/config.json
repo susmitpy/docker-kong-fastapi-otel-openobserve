@@ -1,0 +1,72 @@
+{
+    "name": "upstreamName",
+    "slots": 10000,
+    "algorithm": "round-robin",
+    "hash_on": "none",
+    "hash_fallback": "none",
+    "healthchecks": {
+        "active": {
+            "http_path": "/health",
+            "type": "http",
+            "timeout": 3,
+            "concurrency": 10,
+            "https_verify_certificate": false,
+            "healthy": {
+                "interval": 5,
+                "successes": 2,
+                "http_statuses": [
+                    204
+                ]
+            },
+            "unhealthy": {
+                "interval": 15,
+                "tcp_failures": 1,
+                "timeouts": 1,
+                "http_failures": 1,
+                "http_statuses": [
+                    429,
+                    500,
+                    503
+                ]
+            }
+        },
+        "passive": {
+            "type": "http",
+            "healthy": {
+                "successes": 3,
+                "http_statuses": [
+                    200,
+                    201,
+                    202,
+                    203,
+                    204,
+                    205,
+                    206,
+                    207,
+                    208,
+                    226,
+                    300,
+                    301,
+                    302,
+                    303,
+                    304,
+                    305,
+                    306,
+                    307,
+                    308,
+                    429
+                ]
+            },
+            "unhealthy": {
+                "tcp_failures": 2,
+                "timeouts": 3,
+                "http_failures": 2,
+                "http_statuses": [
+                    500,
+                    503
+                ]
+            }
+        },
+        "threshold": 0
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "name": "jwt",
+    "enabled": true,
+    "protocols": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+    ],
+    "config": {
+        "cookie_names": [],
+        "header_names": [
+            "authorization"
+        ],
+        "key_claim_name": "iss",
+        "maximum_expiration": 0,
+        "run_on_preflight": true,
+        "secret_is_base64": false,
+        "uri_param_names": [
+            "jwt"
+        ],
+        "claims_to_verify": [
+            "exp"
+        ]
+    }
+}

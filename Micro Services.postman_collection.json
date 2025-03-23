@@ -1,0 +1,565 @@
+{
+	"info": {
+		"_postman_id": "56106802-9a06-4bc0-bb91-2762acf0bea8",
+		"name": "Micro Services",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8339188"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Via API Gateway",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"var jsonData = pm.response.json();",
+											"pm.environment.set(\"auth_token\", jsonData.access_token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"susmit\",\n    \"password\":\"susmit\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_auth_host}}/login/",
+									"host": [
+										"{{gateway_auth_host}}"
+									],
+									"path": [
+										"login",
+										""
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"username\":\"susmit\",\n    \"password\":\"susmit\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{gateway_auth_host}}/login/",
+											"host": [
+												"{{gateway_auth_host}}"
+											],
+											"path": [
+												"login",
+												""
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "date",
+											"value": "Sat, 22 Mar 2025 17:01:25 GMT"
+										},
+										{
+											"key": "server",
+											"value": "uvicorn"
+										},
+										{
+											"key": "content-length",
+											"value": "170"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "x-app-instance-id",
+											"value": "01JPZCQQGYVK9SXCHJF8XVTSY4"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpc3N1ZXJfa2V5Iiwic3ViIjoic3VzbWl0IiwiZXhwIjoxNzQyNjczNjg2fQ.2XPFA962oKkKq6JlPNKj6n_JdoIaw281fStm3rhBJME\"\n}"
+								},
+								{
+									"name": "401",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"username\":\"susmit\",\n    \"password\":\"invalid\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{gateway_auth_host}}/login/",
+											"host": [
+												"{{gateway_auth_host}}"
+											],
+											"path": [
+												"login",
+												""
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "date",
+											"value": "Sat, 22 Mar 2025 17:01:43 GMT"
+										},
+										{
+											"key": "server",
+											"value": "uvicorn"
+										},
+										{
+											"key": "content-length",
+											"value": "32"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "x-app-instance-id",
+											"value": "01JPZCQQGYVK9SXCHJF8XVTSY4"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"detail\": \"Invalid credentials\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Health Check",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_auth_host}}/health/",
+									"host": [
+										"{{gateway_auth_host}}"
+									],
+									"path": [
+										"health",
+										""
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Health Check Instance 1",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway_auth_host}}/health/",
+											"host": [
+												"{{gateway_auth_host}}"
+											],
+											"path": [
+												"health",
+												""
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "date",
+											"value": "Sun, 23 Mar 2025 08:10:11 GMT"
+										},
+										{
+											"key": "server",
+											"value": "uvicorn"
+										},
+										{
+											"key": "x-app-instance-id",
+											"value": "01JQ10P7C7H31W9PZX1XPXEHAA"
+										}
+									],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "Health Check Instance 2",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway_auth_host}}/health/",
+											"host": [
+												"{{gateway_auth_host}}"
+											],
+											"path": [
+												"health",
+												""
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "date",
+											"value": "Sun, 23 Mar 2025 08:10:29 GMT"
+										},
+										{
+											"key": "server",
+											"value": "uvicorn"
+										},
+										{
+											"key": "x-app-instance-id",
+											"value": "01JQ10P7C4WEKEYK1Y55YB1QN1"
+										}
+									],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "All Targets Down",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway_auth_host}}/health/",
+											"host": [
+												"{{gateway_auth_host}}"
+											],
+											"path": [
+												"health",
+												""
+											]
+										}
+									},
+									"status": "Service Temporarily Unavailable",
+									"code": 503,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sun, 23 Mar 2025 08:13:23 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Content-Length",
+											"value": "113"
+										},
+										{
+											"key": "X-Kong-Response-Latency",
+											"value": "1"
+										},
+										{
+											"key": "Server",
+											"value": "kong/3.8.0.0-enterprise-edition"
+										},
+										{
+											"key": "X-Kong-Request-Id",
+											"value": "9f31e81f75433b686bd7ec6a5eec686e"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"failure to get a peer from the ring-balancer\",\n    \"request_id\": \"9f31e81f75433b686bd7ec6a5eec686e\"\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Sound Monitor",
+			"item": [
+				{
+					"name": "Via API Gateway",
+					"item": [
+						{
+							"name": "Health Check",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_sound_monitor_host}}/health",
+									"host": [
+										"{{gateway_sound_monitor_host}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Health Check",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway_sound_monitor_host}}/health",
+											"host": [
+												"{{gateway_sound_monitor_host}}"
+											],
+											"path": [
+												"health"
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "date",
+											"value": "Sun, 23 Mar 2025 08:11:00 GMT"
+										},
+										{
+											"key": "server",
+											"value": "uvicorn"
+										},
+										{
+											"key": "x-app-instance-id",
+											"value": "01JQ10P7BHD8Z7Z87GR2H46TCP"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "3"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "9"
+										},
+										{
+											"key": "Via",
+											"value": "1.1 kong/3.8.0.0-enterprise-edition"
+										},
+										{
+											"key": "X-Kong-Request-Id",
+											"value": "59bba31cfb076e24b76dcd281739493b"
+										}
+									],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "No Access Token",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway_sound_monitor_host}}/health",
+											"host": [
+												"{{gateway_sound_monitor_host}}"
+											],
+											"path": [
+												"health"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sun, 23 Mar 2025 08:12:03 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "WWW-Authenticate",
+											"value": "Bearer"
+										},
+										{
+											"key": "Content-Length",
+											"value": "26"
+										},
+										{
+											"key": "X-Kong-Response-Latency",
+											"value": "4"
+										},
+										{
+											"key": "Server",
+											"value": "kong/3.8.0.0-enterprise-edition"
+										},
+										{
+											"key": "X-Kong-Request-Id",
+											"value": "6e7c8678036c9a78e04e422611be6a4a"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Unauthorized\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Alerts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_sound_monitor_host}}/alerts",
+									"host": [
+										"{{gateway_sound_monitor_host}}"
+									],
+									"path": [
+										"alerts"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Alerts",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway_sound_monitor_host}}/alerts",
+											"host": [
+												"{{gateway_sound_monitor_host}}"
+											],
+											"path": [
+												"alerts"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "64"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "date",
+											"value": "Sun, 16 Mar 2025 11:39:44 GMT"
+										},
+										{
+											"key": "server",
+											"value": "uvicorn"
+										},
+										{
+											"key": "x-app-instance-id",
+											"value": "01JPFBXTG2GAJSMGMR7TAKQDTQ"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "1012"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "13"
+										},
+										{
+											"key": "Via",
+											"value": "1.1 kong/3.8.0.0-enterprise-edition"
+										},
+										{
+											"key": "X-Kong-Request-Id",
+											"value": "74983843d98181323e9ec80ffab4d15b"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"alerts\": [\n        {\n            \"id\": 1,\n            \"name\": \"Alert 1\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Alert 2\"\n        }\n    ]\n}"
+								}
+							]
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{auth_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

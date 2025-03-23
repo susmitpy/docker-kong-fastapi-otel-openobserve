@@ -1,0 +1,36 @@
+exporters:
+  debug:
+    verbosity: detailed
+  otlp/openobserve:
+    endpoint: openobserve:5081
+    headers:
+      Authorization: Basic c3VzbWl0QGV4YW1wbGUuY29tOktLdTE3UjlMVnZHUlFqUnk=
+      organization: default
+      stream-name: default
+    tls:
+      insecure: true
+processors:
+  batch:
+    timeout: 1s
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+service:
+  pipelines:
+    logs:
+      exporters:
+      - otlp/openobserve
+      processors:
+      - batch
+      receivers:
+      - otlp
+    traces:
+      exporters:
+      - otlp/openobserve
+      - debug
+      processors:
+      - batch
+      receivers:
+      - otlp
