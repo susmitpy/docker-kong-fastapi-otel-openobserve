@@ -10,6 +10,8 @@ KONG_ADDR = os.getenv("KONG_ADDR", "http://localhost:8001")
 CONSUMER_USERNAME = os.getenv("CONSUMER_USERNAME", "api_user")
 CREDENTIAL_KEY = os.getenv("CREDENTIAL_KEY", "issuer_key")
 JWT_SECRET = os.getenv("JWT_SECRET", "jwt_secret")
+LOGS_ENDPOINT = os.getenv("LOGS_ENDPOINT", "http://localhost:4318/v1/logs")
+TRACES_ENDPOINT = os.getenv("TRACES_ENDPOINT", "http://localhost:4318/v1/traces")
 
 def check_if_service_scoped_plugin_exists(plugin_name:str,service_id:str) -> tuple[bool, str]:
     """
@@ -104,6 +106,10 @@ def install_plugins(config:Config) -> list[Plugin]:
 
     # Install Open Telemetery plugin
     plugin_config = json.loads(Path("tasks/plugins/opentelemetry.json").read_text())
+    ## Update traces and logs endpoint
+    plugin_config["config"]["traces_endpoint"] = TRACES_ENDPOINT
+    plugin_config["config"]["logs_endpoint"] = LOGS_ENDPOINT
+
     create_global_plugin(Plugins.OPEN_TELEMETRY,plugin_config, plugins)
 
     # Install Prometheus plugin

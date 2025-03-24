@@ -70,6 +70,8 @@ services:
       - CONSUMER_USERNAME=api_user
       - CREDENTIAL_KEY=issuer_key
       - JWT_SECRET=jwt_secret
+      - TRACES_ENDPOINT=http://otel-collector:4318/v1/traces
+      - LOGS_ENDPOINT=http://otel-collector:4318/v1/logs
     depends_on:
       kong-migration:
         condition: service_completed_successfully
