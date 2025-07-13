@@ -1,5 +1,9 @@
 # Kong API Gateway with Fast API, Open Telemetry and OpenObserve in Docker
 
+## Demo Video
+
+https://youtu.be/KHkabnbNmHQ
+
 ## Architecture
 ```mermaid
 graph TD
