@@ -132,6 +132,8 @@ It showcases various concepts with examples, among others such as:
 - Run `python clean_up.py` to delete any existing mapped volumes (postgres and openobserve) and start afresh
 - Run `sh setup.sh` to move the files from `common` directory to various directories
 - Spin up the services using `docker-compose up -d`
+- Kong API Gateway will be available at `http://localhost:8002`
+- Open Observe will be available at `http://localhost:5080` and can be accessed using the credentials `susmit@example.com` `passComplex#123`
 
 ## Components
 
