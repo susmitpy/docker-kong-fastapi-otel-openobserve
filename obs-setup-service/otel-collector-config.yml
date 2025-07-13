@@ -4,7 +4,7 @@ exporters:
   otlp/openobserve:
     endpoint: openobserve:5081
     headers:
-      Authorization: Basic c3VzbWl0QGV4YW1wbGUuY29tOjlCaklpd21yZmlOcnMwWTE=
+      Authorization: Basic c3VzbWl0QGV4YW1wbGUuY29tOjdTazVldnhSU2RjWXpBcEU=
       organization: default
       stream-name: default
     tls:
