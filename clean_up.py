@@ -12,6 +12,6 @@ for folder in folders:
         shutil.rmtree(folder)
         print(f"Removed {folder}")
 
-    os.mkdir(folder)
+    os.makedirs(folder)
 
 print("Cleaned up environment and reset data folders")
